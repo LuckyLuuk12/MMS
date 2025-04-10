@@ -1,0 +1,20 @@
+/* Reset most default styling: */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-text-1);
+    scrollbar-gutter: stable;
+    scrollbar-width: none;
+    scrollbar-color: var(--accent-3) var(--background-2);
+}
+html, body {
+    width: 100vw !important;
+    min-height: 100vh !important;
+    overflow-x: hidden;
+    background: var(--gradient-background-2);
+    z-index: -2;
+}
