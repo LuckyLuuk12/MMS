@@ -2,14 +2,15 @@
   import { onMount } from 'svelte';
   import { getMemes, getCategories, search } from '$lib/index';
   import type { Meme } from '$lib/types';
+  import Previews from "$lib/components/Previews.svelte";
   
-  export let memesList: Meme[];
+  let memesList: Meme[] = [];
   let filteredMemes: Meme[] = [];
   let searchQuery = '';
   let selectedCategories: string[] = [];
   let selectedType: string | null = null;
   
-  let categories: string[] = [];
+  $: categories = getCategories(memesList);
   const types = ['img', 'video', 'audio', 'unknown'];
   
   function applyFilters() {
@@ -27,6 +28,13 @@
     
     filteredMemes = search(searchQuery, results);
   }
+  
+  onMount(() => {
+    getMemes().then((data: Meme[]) => {
+      memesList = data;
+      filteredMemes = data;
+    });
+  });
 </script>
 
 <div class="container">
@@ -74,6 +82,7 @@
     </label>
   </div>
 </div>
+<Previews memes={filteredMemes} />
 
 <style>
   .container {
