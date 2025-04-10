@@ -1,0 +1,14 @@
+{
+  "name": "mms",
+  "account_id": "f9fc2d31df3543205f8ce9c1d265c9a0",
+  "main": "./.svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2025-04-10",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".svelte-kit/cloudflare"
+  },
+  "routes": [
+    "mms.kablan.nl/*",
+    "memes.kablan.nl/*"
+  ]
+}
