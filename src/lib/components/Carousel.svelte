@@ -5,6 +5,18 @@
   export let selectedMeme: Meme | null = null;
   $: currentIndex = memes.findIndex(meme => meme === selectedMeme);
   
+  let showNotification = false;
+  
+  function handleCopyToClipboard() {
+    if (selectedMeme) {
+      navigator.clipboard.writeText(`https://${location.hostname}/memes/${selectedMeme.name}`);
+      showNotification = true;
+      setTimeout(() => {
+        showNotification = false;
+      }, 3000); // Hide after 3 seconds
+    }
+  }
+  
 </script>
 
 <!-- A large "popup" carousel with manual control, similar to Previews.svelte -->
@@ -25,7 +37,7 @@
   </div>
   <!-- Buttons like: copy to clipboard, download, etc. -->
   <div class="buttons">
-    <button class="copy" on:click={() => { navigator.clipboard.writeText(`https://${location.hostname}/memes/${selectedMeme?.name}`); }} aria-label="Copy to clipboard">
+    <button class="copy" on:click={handleCopyToClipboard} aria-label="Copy to clipboard">
       <i class="fas fa-copy" />
     </button>
     <a class="download" href={"/memes/"+selectedMeme?.name} download aria-label="Download">
@@ -36,14 +48,21 @@
     <i class="fas fa-times" />
   </button>
 </div>
+  {#if showNotification}
+    <div class="notification">
+      Copied URL to clipboard
+    </div>
+  {/if}
 {/if}
+
+
 
 <style>
   a {
     text-decoration: none;
   }
   .carousel {
-    position: absolute;
+    position: fixed;
     top: 0;
     display: flex;
     flex-direction: column;
@@ -165,5 +184,33 @@
   .close:hover i {
     color: var(--accent-3);
     border-radius: 0.5rem;
+  }
+  .notification {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-3), var(--accent-1));
+    background-size: 300% 100%;
+    color: var(--color-text-1);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    transition: opacity 1s ease-out;
+    z-index: 50;
+    animation: gradientMove 6s infinite;
+  }
+  
+  @keyframes gradientMove {
+    0% {
+      background-position: 0 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
   }
 </style>
