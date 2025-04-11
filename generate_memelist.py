@@ -25,7 +25,7 @@ def generate_assets_json():
             file_path = os.path.join(root, file_name)
             ext = os.path.splitext(file_name)[1]
             file_type = get_file_type(ext)
-            relative_path = os.path.relpath(file_path, MEMES_DIR)
+            relative_path = os.path.relpath(file_path, MEMES_DIR).replace("\\", "/")
             assets.append({"name": relative_path, "type": file_type})
 
     with open(OUTPUT_FILE, "w") as json_file:

@@ -5,8 +5,8 @@
 
 
 <nav>
-  <a href="/">Home</a>
-  <a href="/search">Search</a>
+  <a href="/">Search</a>
+  <a href="/all">All Memes</a>
   <a href="/about">About</a>
 </nav>
 <div class="page">

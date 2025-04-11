@@ -1,31 +1,35 @@
 <script lang="ts">
   import type {Meme} from "$lib/types";
+  import Carousel from "$lib/components/Carousel.svelte";
   
   export let memes: Meme[] = [];
   
-  function clickMeme(event: MouseEvent) {
-    const target = event.currentTarget as HTMLButtonElement;
-    const memeName = target.querySelector('span')?.textContent;
-    if (memeName?.replaceAll('\\', '/')) {
-      console.log(`Meme clicked: ${memeName}`);
-      // Copy the url/memes/memeName to clipboard
-      navigator.clipboard.writeText(`${location.hostname}/memes/${memeName}`).then(() => {
-        console.log(`Copied to clipboard: /memes/${memeName}`);
-      }).catch(err => {
-        console.error('Failed to copy: ', err);
-      });
-    }
-  }
+  let selectedMeme: Meme | null = null;
+  
+  // function clickMeme(event: MouseEvent) {
+  //   const target = event.currentTarget as HTMLButtonElement;
+  //   const memeName = target.querySelector('span')?.textContent;
+  //   if (memeName?.replaceAll('\\', '/')) {
+  //     console.log(`Meme clicked: ${memeName}`);
+  //     // Copy the url/memes/memeName to clipboard
+  //     navigator.clipboard.writeText(`https://${location.hostname}/memes/${memeName}`).then(() => {
+  //       console.log(`Copied to clipboard: /memes/${memeName}`);
+  //     }).catch(err => {
+  //       console.error('Failed to copy: ', err);
+  //     });
+  //   }
+  // }
 </script>
 
 <div class="memes">
   {#each memes as meme}
-    <button class="meme" on:click={clickMeme}>
+    <button class="meme" on:click={() => { selectedMeme = meme; }} aria-label={meme.name}>
       <span>{meme.name}</span>
       <img src={"/memes/"+meme.name} alt={meme.name} />
     </button>
   {/each}
 </div>
+<Carousel memes={memes} selectedMeme={selectedMeme} />
 
 <style>
   .memes {

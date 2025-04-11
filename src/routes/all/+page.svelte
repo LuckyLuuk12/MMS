@@ -1,21 +1,21 @@
 <script lang="ts">
 
-import SearchBar from "$lib/components/SearchBar.svelte";
+import Previews from "$lib/components/Previews.svelte";
+import type {Meme} from "$lib/types";
 import {getMemes} from "$lib";
 import {onMount} from "svelte";
-import type {Meme} from "$lib/types";
 
 let memes: Meme[] = [];
 
 onMount(() => {
-  getMemes().then((data: Meme[]) => {
+  getMemes().then((data) => {
     memes = data;
   });
-});
+})
 </script>
 
 
 
 <main>
-  <SearchBar />
+  <Previews memes={memes} />
 </main>
