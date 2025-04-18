@@ -9,7 +9,7 @@
   
   function handleCopyToClipboard() {
     if (selectedMeme) {
-      navigator.clipboard.writeText(`https://${location.hostname}/memes/${selectedMeme.name}`);
+      navigator.clipboard.writeText(`https://${location.hostname}/memes/${encodeURI(selectedMeme.name)}`);
       showNotification = true;
       setTimeout(() => {
         showNotification = false;
