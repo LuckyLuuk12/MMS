@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Meme } from '$lib/types';
+  import {onDestroy, onMount} from "svelte";
 
   export let memes: Meme[] = [];
   export let selectedMeme: Meme | null = null;
@@ -7,21 +8,43 @@
   
   let showNotification = false;
   
-  function handleCopyToClipboard() {
+  function handleCopyToClipboard(event: Event, show: boolean = true, close: boolean = false) {
     if (selectedMeme) {
       navigator.clipboard.writeText(encodeURI(`https://${location.hostname}/memes/${selectedMeme.name}`));
-      showNotification = true;
+      showNotification = show;
       setTimeout(() => {
         showNotification = false;
+        selectedMeme = close ? null : selectedMeme;
       }, 3000); // Hide after 3 seconds
     }
   }
   
+  function handleKeydown(event: KeyboardEvent) {
+    if (!selectedMeme) return;
+
+    if (event.key === 'ArrowLeft') {
+      selectedMeme = memes[currentIndex - 1 < 0 ? memes.length - 1 : currentIndex - 1];
+    } else if (event.key === 'ArrowRight') {
+      selectedMeme = memes[currentIndex + 1 >= memes.length ? 0 : currentIndex + 1];
+    }
+  }
+  
+  onMount(() => {
+    if (typeof document !== 'undefined') {
+      document.addEventListener('keydown', handleKeydown);
+    }
+  });
+  
+  onDestroy(() => {
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('keydown', handleKeydown);
+    }
+  });
 </script>
 
 <!-- A large "popup" carousel with manual control, similar to Previews.svelte -->
 {#if selectedMeme}
-<div class="carousel">
+<div class="carousel" on:click={e => handleCopyToClipboard(e, true, true)} aria-label="Meme carousel" role="button" on:keydown={handleCopyToClipboard} tabindex="0">
   <div class="meme">
     <h2>{selectedMeme.name.substring(selectedMeme.name.lastIndexOf("/"))}</h2>
     <img src={"/memes/"+selectedMeme.name} alt={selectedMeme.name} />
@@ -29,23 +52,23 @@
   <!-- Control buttons for previous and next -->
   <div class="control">
     <button class="prev" on:click={() => { selectedMeme = memes[currentIndex - 1 < 0 ? memes.length-1 : currentIndex - 1]; }} aria-label="Previous">
-      <i class="fas fa-chevron-left" />
+      <i class="fas fa-chevron-left" ></i>
     </button>
     <button class="next" on:click={() => { selectedMeme = memes[currentIndex + 1 >= memes.length ? 0 : currentIndex + 1]; }} aria-label="Next">
-      <i class="fas fa-chevron-right" />
+      <i class="fas fa-chevron-right" ></i>
     </button>
   </div>
   <!-- Buttons like: copy to clipboard, download, etc. -->
   <div class="buttons">
     <button class="copy" on:click={handleCopyToClipboard} aria-label="Copy to clipboard">
-      <i class="fas fa-copy" />
+      <i class="fas fa-copy" ></i>
     </button>
     <a class="download" href={"/memes/"+selectedMeme?.name} download aria-label="Download">
-      <i class="fas fa-download" />
+      <i class="fas fa-download" ></i>
     </a>
   </div>
   <button class="close" on:click={() => { selectedMeme = null; }} aria-label="Close">
-    <i class="fas fa-times" />
+    <i class="fas fa-times" ></i>
   </button>
 </div>
   {#if showNotification}
