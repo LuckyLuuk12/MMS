@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import {getMemes, getCategories, search, getExtensions} from '$lib/index';
+  import {getMemes, getCategories, search, getExtensions} from '$lib';
   import type { Meme } from '$lib/types';
   import Previews from "$lib/components/Previews.svelte";
   

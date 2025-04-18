@@ -53,7 +53,9 @@ export function getExtensions(memeList: Meme[]): string[] {
 export function search(search: string, memeList: Meme[]): Meme[] {
     const fuseOptions = {
         keys: ['name', 'name.split("/")'],
-        threshold: 0.4, // Adjust for similarity
+        threshold: 0.4, // Higher threshold allows for more lenient matches
+        distance: 100, // Increases tolerance for typos
+        ignoreLocation: true, // Ignores the position of the match in the string
     };
     const fuse = new Fuse(memeList, fuseOptions);
     return search.trim() ? fuse.search(search).map((result) => result.item) : memeList;
