@@ -46,8 +46,21 @@
 {#if selectedMeme}
 <div class="carousel" on:click={e => handleCopyToClipboard(e, true, true)} aria-label="Meme carousel" role="button" on:keydown={handleCopyToClipboard} tabindex="0">
   <div class="meme">
-    <h2>{selectedMeme.name.substring(selectedMeme.name.lastIndexOf("/"))}</h2>
-    <img src={"/memes/"+selectedMeme.name} alt={selectedMeme.name} />
+    <h2>{selectedMeme.name.substring(selectedMeme.name.lastIndexOf("/")+1)}</h2>
+    {#if selectedMeme.type === 'video'}
+      <video autoplay loop muted playsinline width="100%" height="100%">
+        <source src={encodeURI("/memes/"+selectedMeme.name)} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    {:else if selectedMeme.type === 'audio'}
+      <audio controls>
+        <source src={encodeURI("/memes/"+selectedMeme.name)} type="audio/mpeg" />
+        Your browser does not support the audio tag.
+      </audio>
+    {:else}
+      <!-- Default to image -->
+      <img src={"/memes/"+selectedMeme.name} alt={selectedMeme.name} />
+    {/if}
   </div>
   <!-- Control buttons for previous and next -->
   <div class="control">
@@ -117,7 +130,7 @@
     color: var(--color-text-1);
     z-index: 1;
   }
-  .meme img {
+  .meme img, .meme video, .meme audio {
     position: absolute;
     bottom: 0;
     left: 0;

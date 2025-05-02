@@ -25,7 +25,21 @@
   {#each memes as meme}
     <button class="meme" on:click={() => { selectedMeme = meme; }} aria-label={meme.name}>
       <span>{meme.name}</span>
-      <img src={"/memes/"+meme.name} alt={meme.name} />
+      {#if meme.type === 'video'}
+        <video autoplay loop muted playsinline width="100%" height="100%">
+          <source src={"/memes/"+meme.name} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      {:else if meme.type === 'audio'}
+        <audio controls>
+          <source src={"/memes/"+meme.name} type="audio/mpeg" />
+          Your browser does not support the audio tag.
+        </audio>
+      {:else}
+        <!-- Default to image -->
+        <img src={"/memes/"+meme.name} alt={meme.name} />
+      {/if}
+      
     </button>
   {/each}
 </div>
@@ -65,7 +79,7 @@
     
   }
   
-  .meme img {
+  .meme img, .meme video, .meme audio {
     position: absolute;
     bottom: 0;
     left: 0;
